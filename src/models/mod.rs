@@ -1,1 +1,1 @@
-pub mod user_model;
+pub mod word_model;
