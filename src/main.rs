@@ -5,7 +5,7 @@ mod repository;
 #[macro_use]
 extern crate rocket;
 use rocket::{get, http::Status, serde::json::Json};
-use api::word_api::{add_word, get_word};
+use api::word_api::{add_word, get_word, get_all_words};
 use repository::mongodb_repo::MongoRepo;
 
 #[get("/")]
@@ -20,5 +20,5 @@ fn rocket() -> _ {
         .manage(db)
         .mount("/", routes![add_word])
         .mount("/", routes![get_word])
-
+        .mount("/", routes![get_all_words])
 }

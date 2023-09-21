@@ -55,4 +55,14 @@ impl MongoRepo {
             .expect("Error getting word");
         Ok(word_detail.unwrap())
     }
+
+    pub fn get_all_words(&self) -> Result<Vec<Word>, Error>{
+        let cursors = self
+            .col
+            .find(None, None)
+            .ok()
+            .expect("Error getting list of users");
+        let words = cursors.map(|doc| doc.unwrap()).collect();
+        Ok(words)
+    }
 }

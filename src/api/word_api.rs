@@ -35,3 +35,12 @@ pub fn get_word(db: &State<MongoRepo>, path: String) -> Result<Json<Word>, Statu
         Err(_) => Err(Status::InternalServerError),
     }
 }
+
+#[get("/get_all_words")]
+pub fn get_all_words(db: &State<MongoRepo>) -> Result<Json<Vec<Word>>, Status>{
+    let word_detail = db.get_all_words();
+    match word_detail {
+        Ok(word) => Ok(Json(word)),
+        Err(_) => Err(Status::InternalServerError),
+    }
+}
