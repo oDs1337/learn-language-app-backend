@@ -9,11 +9,27 @@ pub fn add_word(
 ) -> Result<Json<InsertOneResult>, Status> {
     let data = Word {
         id: None,
-        word: new_word.word.to_owned(),
-        word_plural: new_word.word_plural.to_owned(),
+        word_single_indefinite: new_word.word_single_indefinite.to_owned(),
+        word_single_definite: new_word.word_single_definite.to_owned(),
+        word_plural_indefinite: new_word.word_plural_indefinite.to_owned(),
+        word_plural_definite: new_word.word_plural_definite.to_owned(),
+        word_plural_genitive: new_word.word_plural_genitive.to_owned(),
         picture_url: new_word.picture_url.to_owned(),
     };
     let word_detail = db.add_word(data);
+    match word_detail {
+        Ok(word) => Ok(Json(word)),
+        Err(_) => Err(Status::InternalServerError),
+    }
+}
+
+#[get("/get_word/<path>")]
+pub fn get_word(db: &State<MongoRepo>, path: String) -> Result<Json<Word>, Status>{
+    let id = path;
+    if id.is_empty(){
+        return Err(Status::BadRequest);
+    };
+    let word_detail = db.get_word(&id);
     match word_detail {
         Ok(word) => Ok(Json(word)),
         Err(_) => Err(Status::InternalServerError),

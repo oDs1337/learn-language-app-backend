@@ -3,7 +3,7 @@ extern crate dotenv;
 use dotenv::dotenv;
 
 use mongodb::{
-    bson::{extjson::de::Error},
+    bson::{extjson::de::Error, oid::ObjectId, doc},
     results::{InsertOneResult},
     sync::{Client, Collection},
 };
@@ -30,8 +30,11 @@ impl MongoRepo {
     pub fn add_word(&self, add_word: Word) -> Result<InsertOneResult, Error> {
         let new_doc = Word {
             id: None,
-            word: add_word.word,
-            word_plural: add_word.word_plural,
+            word_single_indefinite: add_word.word_single_indefinite,
+            word_single_definite: add_word.word_single_definite,
+            word_plural_indefinite: add_word.word_plural_indefinite,
+            word_plural_definite: add_word.word_plural_definite,
+            word_plural_genitive: add_word.word_plural_genitive,
             picture_url: add_word.picture_url,
         };
         let word = self
@@ -40,5 +43,16 @@ impl MongoRepo {
             .ok()
             .expect("Error adding word");
         Ok(word)
+    }
+
+    pub fn get_word(&self, id: &String) -> Result<Word, Error>{
+        let obj_id = ObjectId::parse_str(id).unwrap();
+        let filter = doc! {"_id": obj_id};
+        let word_detail = self
+            .col
+            .find_one(filter, None)
+            .ok()
+            .expect("Error getting word");
+        Ok(word_detail.unwrap())
     }
 }

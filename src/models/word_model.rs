@@ -5,7 +5,10 @@ use serde::{Serialize, Deserialize};
 pub struct Word {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     pub id: Option<ObjectId>,
-    pub word: String,
-    pub word_plural: String,
+    pub word_single_indefinite: String,
+    pub word_single_definite: String,
+    pub word_plural_indefinite: String,
+    pub word_plural_definite: String,
+    pub word_plural_genitive: String,
     pub picture_url: String,
 }
